@@ -1,8 +1,10 @@
 package marhranj_zadaca_2.entiteti;
 
+import marhranj_zadaca_2.composite.Composite;
+
 import java.time.LocalTime;
 
-public class Termin implements Comparable<Termin> {
+public class Termin extends Composite<Termin> implements Comparable<Termin> {
 
     private LocalTime pocetak;
     private LocalTime kraj;

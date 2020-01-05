@@ -1,37 +1,30 @@
 package marhranj_zadaca_2.entiteti;
 
+import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.helperi.VremenaUtils;
-import marhranj_zadaca_2.helperi.UpravljacDatotekama;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
-public class Program {
+public class Program extends Composite<Program> {
 
     private int id;
     private String naziv;
     private LocalTime pocetak;
     private LocalTime kraj;
     private String nazivDatotekeRasporeda;
-    private Raspored raspored;
 
     public Program(String redDatotekeTvKuca) {
         String[] atributi = redDatotekeTvKuca.split("\\s*;\\s*");
         if (atributi.length > 4) {
             try {
                 popuniAtribute(atributi);
-                raspored = new Raspored(pocetak, kraj, new UpravljacDatotekama().procitajDatoteku(nazivDatotekeRasporeda));
-            } catch (IllegalArgumentException | DateTimeParseException | IOException e) {
+            } catch (IllegalArgumentException | DateTimeParseException e) {
                 throw new IllegalArgumentException("Neispravan zapis u datoteci tv kuce: " + redDatotekeTvKuca, e);
             }
         } else {
             throw new IllegalArgumentException("Neispravan zapis u datoteci tv kuce, nedovoljno atributa: " + redDatotekeTvKuca);
         }
-    }
-
-    public Raspored getRaspored() {
-        return raspored;
     }
 
     public String getNaziv() {

@@ -2,14 +2,16 @@ package marhranj_zadaca_2.composite;
 
 import java.util.List;
 
-public interface Component<T> {
+public interface Component<T extends Component> {
 
-    void dodaj(T component);
+    void dodajDijete(T component);
 
-    void dodajSve(List<T> components);
+    void dodajSvuDjecu(List<T> components);
 
-    void obrisi(T component);
+    void obrisiDijete(T component);
 
-    T dohvatiPremaIndexu(int index);
+    T dohvatiDijetePremaIndexu(int index);
+
+    List<T> dohvatiSvuDjecu();
 
 }

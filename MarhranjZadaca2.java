@@ -1,5 +1,6 @@
 package marhranj_zadaca_2;
 
+import com.sun.tools.javac.util.List;
 import marhranj_zadaca_2.composite.Component;
 import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.entiteti.*;
@@ -7,6 +8,9 @@ import marhranj_zadaca_2.helperi.Izbornik;
 import marhranj_zadaca_2.helperi.UcitacKlasa;
 import marhranj_zadaca_2.helperi.UpravljacArgumentimaKmdLin;
 import marhranj_zadaca_2.helperi.UpravljacDatotekama;
+import marhranj_zadaca_2.iterator.Iterator;
+
+import java.io.IOException;
 
 public class MarhranjZadaca2 {
 
@@ -22,37 +26,62 @@ public class MarhranjZadaca2 {
             System.exit(0);
         }
         UcitacKlasa ucitacKlasa = new UcitacKlasa(upravljacDatotekama);
-        postaviStabloRasporeda(ucitacKlasa);
+        postaviPlanRasporeda(ucitacKlasa);
         new Izbornik();
     }
 
-    private static void postaviStabloRasporeda(UcitacKlasa ucitacKlasa) {
+    private static void postaviPlanRasporeda(UcitacKlasa ucitacKlasa) {
         Composite<Component> inicijalniPodaci = new Composite<>();
-        Composite<Component> planPrograma = new Composite<>();
+        Composite<Program> planPrograma = new Composite<>();
 
-        TvKuca.dajInstancu().dodajListStablu(inicijalniPodaci);
-        TvKuca.dajInstancu().dodajListStablu(planPrograma);
+        TvKuca.dajInstancu().dodajDijete(inicijalniPodaci);
+        TvKuca.dajInstancu().dodajDijete(planPrograma);
 
-        modificirajInicijalnePodatke(ucitacKlasa, inicijalniPodaci);
-
+        sloziInicijalnePodatke(ucitacKlasa, inicijalniPodaci);
+        sloziPlanPrograma(ucitacKlasa, planPrograma);
     }
 
-    private static void modificirajInicijalnePodatke(UcitacKlasa ucitacKlasa, Composite<Component> inicijalniPodaci) {
+    private static void sloziInicijalnePodatke(UcitacKlasa ucitacKlasa, Composite<Component> inicijalniPodaci) {
         Composite<Uloga> sveUloge = new Composite<>();
-        sveUloge.dodajSve(ucitacKlasa.ucitajUloge());
-        inicijalniPodaci.dodaj(sveUloge);
+        sveUloge.dodajSvuDjecu(ucitacKlasa.ucitajUloge());
+        inicijalniPodaci.dodajDijete(sveUloge);
 
         Composite<Osoba> sveOsobe = new Composite<>();
-        sveOsobe.dodajSve(ucitacKlasa.ucitajOsobe());
-        inicijalniPodaci.dodaj(sveOsobe);
+        sveOsobe.dodajSvuDjecu(ucitacKlasa.ucitajOsobe());
+        inicijalniPodaci.dodajDijete(sveOsobe);
 
         Composite<VrstaEmisije> sveVrsteEmisija = new Composite<>();
-        sveVrsteEmisija.dodajSve(ucitacKlasa.ucitajVrsteEmisija());
-        inicijalniPodaci.dodaj(sveVrsteEmisija);
+        sveVrsteEmisija.dodajSvuDjecu(ucitacKlasa.ucitajVrsteEmisija());
+        inicijalniPodaci.dodajDijete(sveVrsteEmisija);
 
         Composite<Emisija> sveEmisije = new Composite<>();
-        sveEmisije.dodajSve(ucitacKlasa.ucitajEmisije());
-        inicijalniPodaci.dodaj(sveEmisije);
+        sveEmisije.dodajSvuDjecu(ucitacKlasa.ucitajEmisije());
+        inicijalniPodaci.dodajDijete(sveEmisije);
+    }
+
+    private static void sloziPlanPrograma(UcitacKlasa ucitacKlasa, Composite<Program> planPrograma) {
+        planPrograma.dodajSvuDjecu(ucitacKlasa.ucitajPrograme());
+        Iterator<Program> iteratorPrograma = planPrograma.dohvatiIterator();
+        while (iteratorPrograma.hasNext()) {
+            Program program = iteratorPrograma.next();
+            try {
+                Dan ponedjeljak = new Dan(program.getPocetak(), program.getKraj(), "Ponedjeljak");
+                Dan utorak = new Dan(program.getPocetak(), program.getKraj(), "Utorak");
+                Dan srijeda = new Dan(program.getPocetak(), program.getKraj(), "Srijeda");
+                Dan cetvrtak = new Dan(program.getPocetak(), program.getKraj(), "Cetvrtak");
+                Dan petak = new Dan(program.getPocetak(), program.getKraj(), "Petak");
+                Dan subota = new Dan(program.getPocetak(), program.getKraj(), "Subota");
+                Dan nedjelja = new Dan(program.getPocetak(), program.getKraj(), "Nedjelja");
+
+                Raspored raspored = new Raspored();
+                ((Composite) raspored).dodajSvuDjecu(List.of(ponedjeljak, utorak, srijeda, cetvrtak, petak, subota, nedjelja));
+                raspored.popuniRaspored(new UpravljacDatotekama().procitajDatoteku(program.getNazivDatotekeRasporeda()));
+
+                ((Composite) program).dodajDijete(raspored);
+            } catch (IOException e) {
+                System.err.println(String.format("Ne postoji datoteka sa nazivom %s", program.getNazivDatotekeRasporeda()));
+            }
+        }
     }
 
 }

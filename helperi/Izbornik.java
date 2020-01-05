@@ -1,13 +1,16 @@
 package marhranj_zadaca_2.helperi;
 
+import marhranj_zadaca_2.composite.Component;
 import marhranj_zadaca_2.entiteti.Dan;
 import marhranj_zadaca_2.entiteti.Program;
+import marhranj_zadaca_2.entiteti.Raspored;
 import marhranj_zadaca_2.entiteti.TvKuca;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
+
+import static marhranj_zadaca_2.Konstante.INDEX_PLANA_PROGRAMA;
 
 public class Izbornik {
 
@@ -17,7 +20,8 @@ public class Izbornik {
 
     private void prikaziIzbornik() {
         Scanner scanner = new Scanner(System.in);
-        List<Program> programi = new ArrayList<>();
+        List<Program> programi = TvKuca.dajInstancu().dohvatiDijetePremaIndexu(INDEX_PLANA_PROGRAMA)
+                .dohvatiSvuDjecu();
         if (!programi.isEmpty()) {
             while (true) {
                 try {
@@ -55,10 +59,13 @@ public class Izbornik {
 
     private Dan dohvatiOdabraniDan(Scanner scanner, Program program) {
         int odabir;
+        Raspored raspored;
         do {
             System.out.println("Odaberite dan za koji zelite ispis programa: ");
-            IntStream.rangeClosed(1, 7)
-                    .forEach(i -> System.out.println(i + ". " + program.getRaspored().dohvatiDanPremaIndexu(i).getNaziv()));
+            raspored = (Raspored) (Component) program.dohvatiDijetePremaIndexu(0);
+            for (int i = 1; i <= 7; i++) {
+                System.out.println(i + ". " + ((Dan) (Component) raspored.dohvatiDijetePremaIndexu(i - 1)).getNaziv());
+            }
             odabir = Integer.parseInt(scanner.nextLine());
             if (odabir < 0 || odabir > 7) {
                 System.err.println("Niste unijeli ispravan dan");
@@ -69,7 +76,7 @@ public class Izbornik {
             System.exit(0);
         }
 
-        return program.getRaspored().dohvatiDanPremaIndexu(odabir);
+        return (Dan) (Component) raspored.dohvatiDijetePremaIndexu(odabir - 1);
     }
 
     private void prikaziOpcijeZaDan(Scanner scanner, Dan dan) {
@@ -77,7 +84,7 @@ public class Izbornik {
         do {
             System.out.println("Odaberite opciju koju zelite za dan: ");
             System.out.println("1. Prikaz rasporeda za dan: " + dan.getNaziv());
-            System.out.println("2. Prikaz statistike za dan: " + dan.getNaziv());
+//            System.out.println("2. Prikaz statistike za dan: " + dan.getNaziv());
             odabir = Integer.parseInt(scanner.nextLine());
              if (odabir < 0 || odabir > 2) {
                 System.err.println("Niste unijeli ispravan odabir");
@@ -86,10 +93,8 @@ public class Izbornik {
 
         if (odabir == 0) {
             System.exit(0);
-        } else if (odabir == 1) {
-            System.out.println(dan.dohvatiTermineZaDan());
         } else {
-            System.out.println(dan.dohvatiStatistikuZaDan());
+            System.out.println(dan.dohvatiTermineZaDan());
         }
     }
 

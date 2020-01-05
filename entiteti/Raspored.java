@@ -1,5 +1,7 @@
 package marhranj_zadaca_2.entiteti;
 
+import marhranj_zadaca_2.composite.Component;
+import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.helperi.DohvacanjeEntiteta;
 import marhranj_zadaca_2.helperi.VremenaUtils;
 
@@ -8,24 +10,16 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class Raspored {
+public class Raspored extends Composite<Raspored> {
 
     private static final String OSOBA_ULOGA_REGEX = "^([0-9]*-([0-9]+)(,[0-9]*-[0-9]+)*)$";
     private static final String VRIJEME_REGEX = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DAN_IZVODENJA_REGEX = "^([0-9]*(,[0-9]+)+)|([0-9]*-[0-9]+)|([0-9]*)$";
     private static final String ID_REGEX = "^[0-9]*$";
 
-    private Dan ponedjeljak;
-    private Dan utorak;
-    private Dan srijeda;
-    private Dan cetvrtak;
-    private Dan petak;
-    private Dan subota;
-    private Dan nedjelja;
+    public Raspored() {}
 
-    public Raspored(LocalTime pocetak, LocalTime kraj, String sadrzajDatotekeRasporeda) {
-        inicijalizirajDane(pocetak, kraj);
-
+    public void popuniRaspored(String sadrzajDatotekeRasporeda) {
         String[] redoviZapisa = sadrzajDatotekeRasporeda.split("\\r?\\n");
         redoviZapisa = Arrays.copyOfRange(redoviZapisa, 1, redoviZapisa.length);
         String[] emisijeSaZadanimPocetkom = dohvatiRedoveZapisaPremaBrojuAtributa(redoviZapisa, 3);
@@ -42,29 +36,6 @@ public class Raspored {
         if (redoviZapisa.length > 0) {
             System.err.println("Greske u sljedecim zapisima programa: " + Arrays.toString(redoviZapisa));
         }
-    }
-
-    public Dan dohvatiDanPremaIndexu(int index) {
-        switch (index) {
-            case 1: return ponedjeljak;
-            case 2: return utorak;
-            case 3: return srijeda;
-            case 4: return cetvrtak;
-            case 5: return petak;
-            case 6: return subota;
-            case 7: return nedjelja;
-            default: return null;
-        }
-    }
-
-    private void inicijalizirajDane(LocalTime pocetak, LocalTime kraj) {
-        this.ponedjeljak = new Dan(pocetak, kraj, "Ponedjeljak");
-        this.utorak = new Dan(pocetak, kraj, "Utorak");
-        this.srijeda = new Dan(pocetak, kraj, "Srijeda");
-        this.cetvrtak = new Dan(pocetak, kraj, "Cetvrtak");
-        this.petak = new Dan(pocetak, kraj, "Petak");
-        this.subota = new Dan(pocetak, kraj, "Subota");
-        this.nedjelja = new Dan(pocetak, kraj, "Nedjelja");
     }
 
     private void popuniRasporedEmisijamaSaZadanimPocetkom(String[] emisijeSaZadanimPocetkom) {
@@ -142,7 +113,7 @@ public class Raspored {
 
     private boolean dodajEmisijuDanu(LocalTime pocetakEmisije, Emisija emisija, int indexDana) {
         boolean uspjesnoDodano = false;
-        Dan dan = dohvatiDanPremaIndexu(indexDana);
+        Dan dan = (Dan) (Component) dohvatiSvuDjecu().get(indexDana - 1);
         if (dan != null) {
             if (pocetakEmisije != null) {
                 uspjesnoDodano = dan.dodajEmisiju(pocetakEmisije, emisija);
