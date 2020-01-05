@@ -1,4 +1,4 @@
-package marhranj_zadaca_2.sucelja;
+package marhranj_zadaca_2.prototype;
 
 public interface Prototype {
 

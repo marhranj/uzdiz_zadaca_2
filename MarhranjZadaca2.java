@@ -1,6 +1,8 @@
 package marhranj_zadaca_2;
 
-import marhranj_zadaca_2.entiteti.TvKuca;
+import marhranj_zadaca_2.composite.Component;
+import marhranj_zadaca_2.composite.Composite;
+import marhranj_zadaca_2.entiteti.*;
 import marhranj_zadaca_2.helperi.Izbornik;
 import marhranj_zadaca_2.helperi.UcitacKlasa;
 import marhranj_zadaca_2.helperi.UpravljacArgumentimaKmdLin;
@@ -20,16 +22,37 @@ public class MarhranjZadaca2 {
             System.exit(0);
         }
         UcitacKlasa ucitacKlasa = new UcitacKlasa(upravljacDatotekama);
-        postaviZnacajkeTvKuce(ucitacKlasa);
+        postaviStabloRasporeda(ucitacKlasa);
         new Izbornik();
     }
 
-    private static void postaviZnacajkeTvKuce(UcitacKlasa ucitacKlasa) {
-        TvKuca tvKuca = TvKuca.dajInstancu();
-        tvKuca.setUloge(ucitacKlasa.ucitajUloge());
-        tvKuca.setOsobe(ucitacKlasa.ucitajOsobe());
-        tvKuca.setEmisije(ucitacKlasa.ucitajEmisije());
-        tvKuca.setProgrami(ucitacKlasa.ucitajPrograme());
+    private static void postaviStabloRasporeda(UcitacKlasa ucitacKlasa) {
+        Composite<Component> inicijalniPodaci = new Composite<>();
+        Composite<Component> planPrograma = new Composite<>();
+
+        TvKuca.dajInstancu().dodajListStablu(inicijalniPodaci);
+        TvKuca.dajInstancu().dodajListStablu(planPrograma);
+
+        modificirajInicijalnePodatke(ucitacKlasa, inicijalniPodaci);
+
+    }
+
+    private static void modificirajInicijalnePodatke(UcitacKlasa ucitacKlasa, Composite<Component> inicijalniPodaci) {
+        Composite<Uloga> sveUloge = new Composite<>();
+        sveUloge.dodajSve(ucitacKlasa.ucitajUloge());
+        inicijalniPodaci.dodaj(sveUloge);
+
+        Composite<Osoba> sveOsobe = new Composite<>();
+        sveOsobe.dodajSve(ucitacKlasa.ucitajOsobe());
+        inicijalniPodaci.dodaj(sveOsobe);
+
+        Composite<VrstaEmisije> sveVrsteEmisija = new Composite<>();
+        sveVrsteEmisija.dodajSve(ucitacKlasa.ucitajVrsteEmisija());
+        inicijalniPodaci.dodaj(sveVrsteEmisija);
+
+        Composite<Emisija> sveEmisije = new Composite<>();
+        sveEmisije.dodajSve(ucitacKlasa.ucitajEmisije());
+        inicijalniPodaci.dodaj(sveEmisije);
     }
 
 }

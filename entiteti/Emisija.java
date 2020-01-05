@@ -1,7 +1,8 @@
 package marhranj_zadaca_2.entiteti;
 
+import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.helperi.DohvacanjeEntiteta;
-import marhranj_zadaca_2.sucelja.Prototype;
+import marhranj_zadaca_2.prototype.Prototype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Emisija implements Prototype {
+public class Emisija extends Composite<Emisija> implements Prototype {
 
     private int id;
     private String nazivEmisije;
     private long trajanje;
+    private VrstaEmisije vrstaEmisije;
     private List<Osoba> osobe = new ArrayList<>();
 
     public Emisija(Emisija emisija) {
@@ -21,6 +23,7 @@ public class Emisija implements Prototype {
             this.id = emisija.id;
             this.nazivEmisije = emisija.nazivEmisije;
             this.trajanje = emisija.trajanje;
+            this.vrstaEmisije = emisija.vrstaEmisije;
             this.osobe = new ArrayList<>(emisija.osobe);
         }
     }
@@ -62,9 +65,11 @@ public class Emisija implements Prototype {
     private void popuniAtribute(String[] atributi) {
         id = Integer.parseInt(atributi[0]);
         nazivEmisije = atributi[1];
-        trajanje = Long.parseLong(atributi[2]);
-        if (atributi.length > 3) {
-            String[] osobeUloge = atributi[3].split("\\s*,\\s*");
+        vrstaEmisije = DohvacanjeEntiteta.dohvatiVrstuPremaId(Integer.parseInt(atributi[2]))
+                .orElse(null);
+        trajanje = Long.parseLong(atributi[3]);
+        if (atributi.length > 4) {
+            String[] osobeUloge = atributi[4].split("\\s*,\\s*");
             dodajUlogeOsobama(osobeUloge);
         }
     }

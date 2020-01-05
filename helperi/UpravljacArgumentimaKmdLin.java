@@ -17,6 +17,7 @@ public class UpravljacArgumentimaKmdLin {
     private String datotekaOsobe;
     private String datotekaTvKuca;
     private String datotekaUloge;
+    private String datotekaVrste;
 
     public UpravljacArgumentimaKmdLin(String[] argumentiKomandneLinije) {
         this.argumentiKomandneLinije = argumentiKomandneLinije;
@@ -28,7 +29,8 @@ public class UpravljacArgumentimaKmdLin {
         datotekaEmisije = parametri.get("e");
         datotekaTvKuca = parametri.get("t");
         datotekaUloge = parametri.get("u");
-        return Stream.of(datotekaOsobe, datotekaEmisije, datotekaTvKuca, datotekaUloge)
+        datotekaVrste = parametri.get("v");
+        return Stream.of(datotekaOsobe, datotekaEmisije, datotekaTvKuca, datotekaUloge, datotekaVrste)
                 .allMatch(Objects::nonNull);
     }
 
@@ -46,6 +48,10 @@ public class UpravljacArgumentimaKmdLin {
 
     public String getDatotekaUloge() {
         return datotekaUloge;
+    }
+
+    public String getDatotekaVrste() {
+        return datotekaVrste;
     }
 
     private Map<String, String> pretvoriUMapuParametarVrijednost(String[] argumenti) {

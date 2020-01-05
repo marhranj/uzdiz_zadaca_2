@@ -1,15 +1,24 @@
 package marhranj_zadaca_2.entiteti;
 
+import marhranj_zadaca_2.composite.Component;
+import marhranj_zadaca_2.composite.Composite;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TvKuca {
 
+    public static final int INDEX_INICIJALNIH_PODATAKA = 0;
+    public static final int INDEX_PLANA_PROGRAMA = 1;
+
+    private static final int INDEX_INICIJALNIH_ULOGA = 0;
+    private static final int INDEX_INICIJALNIH_OSOBA = 1;
+    private static final int INDEX_INICIJALNIH_VRSTA_EMISIJA = 2;
+    private static final int INDEX_INICIJALNIH_EMISIJA = 3;
+
     private static TvKuca instanca;
 
-    private List<Uloga> uloge;
-    private List<Osoba> osobe;
-    private List<Emisija> emisije;
-    private List<Program> programi;
+    private List<Component> stabloKomponenti = new ArrayList<>();
 
     static {
         instanca = new TvKuca();
@@ -21,36 +30,40 @@ public class TvKuca {
         return instanca;
     }
 
-    public List<Uloga> getUloge() {
-        return uloge;
+    public List<Component> getStabloKomponenti() {
+        return stabloKomponenti;
     }
 
-    public void setUloge(List<Uloga> uloge) {
-        this.uloge = uloge;
+    public void dodajListStablu(Component list) {
+        this.stabloKomponenti.add(list);
     }
 
-    public List<Osoba> getOsobe() {
-        return osobe;
+    public List<Uloga> dohvatiInicijalneUloge() {
+        return ((Composite) getStabloKomponenti()
+                .get(INDEX_INICIJALNIH_PODATAKA)
+                .dohvatiPremaIndexu(INDEX_INICIJALNIH_ULOGA))
+                .dohvatiListove();
     }
 
-    public void setOsobe(List<Osoba> osobe) {
-        this.osobe = osobe;
+    public List<Osoba> dohvatiInicijalneOsobe() {
+        return ((Composite) getStabloKomponenti()
+                .get(INDEX_INICIJALNIH_PODATAKA)
+                .dohvatiPremaIndexu(INDEX_INICIJALNIH_OSOBA))
+                .dohvatiListove();
     }
 
-    public List<Emisija> getEmisije() {
-        return emisije;
+    public List<VrstaEmisije> dohvatiInicijalneVrsteEmisija() {
+        return ((Composite) getStabloKomponenti()
+                .get(INDEX_INICIJALNIH_PODATAKA)
+                .dohvatiPremaIndexu(INDEX_INICIJALNIH_VRSTA_EMISIJA))
+                .dohvatiListove();
     }
 
-    public void setEmisije(List<Emisija> emisije) {
-        this.emisije = emisije;
-    }
-
-    public List<Program> getProgrami() {
-        return programi;
-    }
-
-    public void setProgrami(List<Program> programi) {
-        this.programi = programi;
+    public List<Emisija> dohvatiInicijalneEmisije() {
+        return ((Composite) getStabloKomponenti()
+                .get(INDEX_INICIJALNIH_PODATAKA)
+                .dohvatiPremaIndexu(INDEX_INICIJALNIH_EMISIJA))
+                .dohvatiListove();
     }
 
 }

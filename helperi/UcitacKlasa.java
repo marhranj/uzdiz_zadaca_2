@@ -1,9 +1,6 @@
 package marhranj_zadaca_2.helperi;
 
-import marhranj_zadaca_2.entiteti.Emisija;
-import marhranj_zadaca_2.entiteti.Osoba;
-import marhranj_zadaca_2.entiteti.Program;
-import marhranj_zadaca_2.entiteti.Uloga;
+import marhranj_zadaca_2.entiteti.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +30,10 @@ public class UcitacKlasa {
 
     public List<Program> ucitajPrograme() {
         return ucitajSadrzajDatotekeUKlasu(upravljacDatotekama.getDatotekaTvKuca(), Program.class);
+    }
+
+    public List<VrstaEmisije> ucitajVrsteEmisija() {
+        return ucitajSadrzajDatotekeUKlasu(upravljacDatotekama.getDatotekaVrste(), VrstaEmisije.class);
     }
 
     private <T> List<T> ucitajSadrzajDatotekeUKlasu(String sadrzajDatoteke, Class<T> klasa) {

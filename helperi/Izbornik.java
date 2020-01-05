@@ -4,6 +4,7 @@ import marhranj_zadaca_2.entiteti.Dan;
 import marhranj_zadaca_2.entiteti.Program;
 import marhranj_zadaca_2.entiteti.TvKuca;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -16,7 +17,7 @@ public class Izbornik {
 
     private void prikaziIzbornik() {
         Scanner scanner = new Scanner(System.in);
-        List<Program> programi = TvKuca.dajInstancu().getProgrami();
+        List<Program> programi = new ArrayList<>();
         if (!programi.isEmpty()) {
             while (true) {
                 try {

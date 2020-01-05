@@ -12,6 +12,7 @@ public class UpravljacDatotekama {
     private String datotekaOsobe;
     private String datotekaTvKuca;
     private String datotekaUloge;
+    private String datotekaVrste;
 
     public UpravljacDatotekama() {
     }
@@ -26,6 +27,7 @@ public class UpravljacDatotekama {
             datotekaOsobe = procitajDatoteku(upravljacArgumentimaKmdLin.getDatotekaOsobe());
             datotekaTvKuca = procitajDatoteku(upravljacArgumentimaKmdLin.getDatotekaTvKuca());
             datotekaUloge = procitajDatoteku(upravljacArgumentimaKmdLin.getDatotekaUloge());
+            datotekaVrste = procitajDatoteku(upravljacArgumentimaKmdLin.getDatotekaVrste());
         } catch (IOException e) {
             return false;
         }
@@ -50,6 +52,10 @@ public class UpravljacDatotekama {
 
     public String getDatotekaUloge() {
         return datotekaUloge;
+    }
+
+    public String getDatotekaVrste() {
+        return datotekaVrste;
     }
 
 }

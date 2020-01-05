@@ -1,9 +1,6 @@
 package marhranj_zadaca_2.helperi;
 
-import marhranj_zadaca_2.entiteti.Emisija;
-import marhranj_zadaca_2.entiteti.Osoba;
-import marhranj_zadaca_2.entiteti.TvKuca;
-import marhranj_zadaca_2.entiteti.Uloga;
+import marhranj_zadaca_2.entiteti.*;
 
 import java.util.Optional;
 
@@ -12,7 +9,7 @@ public final class DohvacanjeEntiteta {
     private DohvacanjeEntiteta() {}
 
     public static Optional<Osoba> dohvatiOsobuPremaId(int idOsobe) {
-        Optional<Osoba> osobaId = TvKuca.dajInstancu().getOsobe()
+        Optional<Osoba> osobaId = TvKuca.dajInstancu().dohvatiInicijalneOsobe()
                 .stream()
                 .filter(osoba -> osoba.getId() == idOsobe)
                 .map(osoba -> (Osoba) osoba.clone())
@@ -24,7 +21,7 @@ public final class DohvacanjeEntiteta {
     }
 
     public static Optional<Uloga> dohvatiUloguPremaId(int idUloge) {
-        Optional<Uloga> ulogaId = TvKuca.dajInstancu().getUloge()
+        Optional<Uloga> ulogaId = TvKuca.dajInstancu().dohvatiInicijalneUloge()
                 .stream()
                 .filter(uloga -> uloga.getId() == idUloge)
                 .findFirst();
@@ -35,7 +32,7 @@ public final class DohvacanjeEntiteta {
     }
 
     public static Optional<Emisija> dohvatiEmisijuPremaId(int idEmisije) {
-        Optional<Emisija> emisijaSaId = TvKuca.dajInstancu().getEmisije()
+        Optional<Emisija> emisijaSaId = TvKuca.dajInstancu().dohvatiInicijalneEmisije()
                 .stream()
                 .filter(emisija -> emisija.getId() == idEmisije)
                 .map(emisija -> (Emisija) emisija.clone())
@@ -44,6 +41,17 @@ public final class DohvacanjeEntiteta {
             System.err.println("Nije pronađena emisija sa id " + idEmisije);
         }
         return emisijaSaId;
+    }
+
+    public static Optional<VrstaEmisije> dohvatiVrstuPremaId(int idVrste) {
+        Optional<VrstaEmisije> vrstaSaId = TvKuca.dajInstancu().dohvatiInicijalneVrsteEmisija()
+                .stream()
+                .filter(vrstaEmisije -> vrstaEmisije.getId() == idVrste)
+                .findFirst();
+        if (!vrstaSaId.isPresent()) {
+            System.err.println("Nije pronađena vrsta emisije sa id " + idVrste);
+        }
+        return vrstaSaId;
     }
 
 }

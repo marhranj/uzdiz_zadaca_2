@@ -1,6 +1,8 @@
 package marhranj_zadaca_2.entiteti;
 
-public class Uloga {
+import marhranj_zadaca_2.composite.Composite;
+
+public class Uloga extends Composite<Uloga> {
 
     private int id;
     private String nazivUloge;

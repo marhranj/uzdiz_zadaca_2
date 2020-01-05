@@ -1,8 +1,9 @@
 package marhranj_zadaca_2.entiteti;
 
-import marhranj_zadaca_2.sucelja.Prototype;
+import marhranj_zadaca_2.composite.Composite;
+import marhranj_zadaca_2.prototype.Prototype;
 
-public class Osoba implements Prototype {
+public class Osoba extends Composite<Osoba> implements Prototype {
 
     private int id;
     private String imePrezime;
