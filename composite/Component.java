@@ -8,10 +8,12 @@ public interface Component<T extends Component> {
 
     void dodajSvuDjecu(List<T> components);
 
-    void obrisiDijete(T component);
-
     T dohvatiDijetePremaIndexu(int index);
 
     List<T> dohvatiSvuDjecu();
+
+    void postaviRoditelja(T roditelj);
+
+    T dohvatiRoditelja();
 
 }

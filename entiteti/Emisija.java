@@ -3,20 +3,25 @@ package marhranj_zadaca_2.entiteti;
 import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.helperi.DohvacanjeEntiteta;
 import marhranj_zadaca_2.prototype.Prototype;
+import marhranj_zadaca_2.visitor.Visitable;
+import marhranj_zadaca_2.visitor.Visitor;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Emisija extends Composite<Emisija> implements Prototype {
+public class Emisija extends Composite<Emisija> implements Prototype, Visitable, Comparable<Emisija> {
 
     private int id;
     private String nazivEmisije;
     private long trajanje;
     private VrstaEmisije vrstaEmisije;
     private List<Osoba> osobe = new ArrayList<>();
+    private LocalTime pocetak;
+    private LocalTime kraj;
 
     public Emisija(Emisija emisija) {
         if (emisija != null) {
@@ -46,6 +51,11 @@ public class Emisija extends Composite<Emisija> implements Prototype {
         return new Emisija(this);
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
     public int getId() {
         return id;
     }
@@ -62,16 +72,21 @@ public class Emisija extends Composite<Emisija> implements Prototype {
         return osobe;
     }
 
-    private void popuniAtribute(String[] atributi) {
-        id = Integer.parseInt(atributi[0]);
-        nazivEmisije = atributi[1];
-        vrstaEmisije = DohvacanjeEntiteta.dohvatiVrstuPremaId(Integer.parseInt(atributi[2]))
-                .orElse(null);
-        trajanje = Long.parseLong(atributi[3]);
-        if (atributi.length > 4) {
-            String[] osobeUloge = atributi[4].split("\\s*,\\s*");
-            dodajUlogeOsobama(osobeUloge);
-        }
+    public VrstaEmisije getVrstaEmisije() {
+        return vrstaEmisije;
+    }
+
+    public LocalTime getPocetak() {
+        return pocetak;
+    }
+
+    public void setPocetakIKraj(LocalTime pocetak) {
+        this.pocetak = pocetak;
+        this.kraj = pocetak.plusMinutes(getTrajanje());
+    }
+
+    public LocalTime getKraj() {
+        return kraj;
     }
 
     public void dodajUlogeOsobama(String[] osobeUloge) {
@@ -82,6 +97,18 @@ public class Emisija extends Composite<Emisija> implements Prototype {
                 .map(Optional::get)
                 .collect(Collectors.toList());
         osobe.addAll(osobeSaNovimUlogama);
+    }
+
+    private void popuniAtribute(String[] atributi) {
+        id = Integer.parseInt(atributi[0]);
+        nazivEmisije = atributi[1];
+        vrstaEmisije = DohvacanjeEntiteta.dohvatiVrstuPremaId(Integer.parseInt(atributi[2]))
+                .orElse(null);
+        trajanje = Long.parseLong(atributi[3]);
+        if (atributi.length > 4) {
+            String[] osobeUloge = atributi[4].split("\\s*,\\s*");
+            dodajUlogeOsobama(osobeUloge);
+        }
     }
 
     private Optional<Osoba> dodjeliOsobiUlogu(String[] osobaUloga) throws IllegalArgumentException {
@@ -95,4 +122,8 @@ public class Emisija extends Composite<Emisija> implements Prototype {
         }
     }
 
+    @Override
+    public int compareTo(Emisija emisija) {
+        return this.pocetak.compareTo(emisija.pocetak);
+    }
 }

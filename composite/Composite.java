@@ -9,20 +9,18 @@ import java.util.List;
 public class Composite<T extends Component> implements Component<T>, Container<T> {
 
     private List<T> listovi = new ArrayList<>();
+    private T roditelj;
 
     @Override
     public void dodajDijete(T component) {
         listovi.add(component);
+        component.postaviRoditelja(this);
     }
 
     @Override
     public void dodajSvuDjecu(List<T> components) {
         listovi.addAll(components);
-    }
-
-    @Override
-    public void obrisiDijete(T component) {
-        listovi.remove(component);
+        components.forEach(component -> component.postaviRoditelja(this));
     }
 
     @Override
@@ -35,11 +33,21 @@ public class Composite<T extends Component> implements Component<T>, Container<T
     }
 
     @Override
-    public Iterator<T> dohvatiIterator() {
-        return new IteratorChildova();
+    public void postaviRoditelja(T roditelj) {
+        this.roditelj = roditelj;
     }
 
-    private class IteratorChildova implements Iterator<T> {
+    @Override
+    public T dohvatiRoditelja() {
+        return roditelj;
+    }
+
+    @Override
+    public Iterator<T> dohvatiIteratorDjece() {
+        return new IteratorDjece();
+    }
+
+    private class IteratorDjece implements Iterator<T> {
 
         int index;
 

@@ -35,7 +35,7 @@ public class VrstaEmisije extends Composite<VrstaEmisije> {
         return naziv;
     }
 
-    public boolean isImaReklame() {
+    public boolean imaReklame() {
         return imaReklame;
     }
 

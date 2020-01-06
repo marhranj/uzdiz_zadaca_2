@@ -25,12 +25,11 @@ public class MarhranjZadaca2 {
             System.err.println("Neispravni nazivi datoteka");
             System.exit(0);
         }
-        UcitacKlasa ucitacKlasa = new UcitacKlasa(upravljacDatotekama);
-        postaviPlanRasporeda(ucitacKlasa);
+        postaviPlanPrograma(new UcitacKlasa(upravljacDatotekama));
         new Izbornik();
     }
 
-    private static void postaviPlanRasporeda(UcitacKlasa ucitacKlasa) {
+    private static void postaviPlanPrograma(UcitacKlasa ucitacKlasa) {
         Composite<Component> inicijalniPodaci = new Composite<>();
         Composite<Program> planPrograma = new Composite<>();
 
@@ -61,27 +60,31 @@ public class MarhranjZadaca2 {
 
     private static void sloziPlanPrograma(UcitacKlasa ucitacKlasa, Composite<Program> planPrograma) {
         planPrograma.dodajSvuDjecu(ucitacKlasa.ucitajPrograme());
-        Iterator<Program> iteratorPrograma = planPrograma.dohvatiIterator();
+        Iterator<Program> iteratorPrograma = planPrograma.dohvatiIteratorDjece();
         while (iteratorPrograma.hasNext()) {
             Program program = iteratorPrograma.next();
-            try {
-                Dan ponedjeljak = new Dan(program.getPocetak(), program.getKraj(), "Ponedjeljak");
-                Dan utorak = new Dan(program.getPocetak(), program.getKraj(), "Utorak");
-                Dan srijeda = new Dan(program.getPocetak(), program.getKraj(), "Srijeda");
-                Dan cetvrtak = new Dan(program.getPocetak(), program.getKraj(), "Cetvrtak");
-                Dan petak = new Dan(program.getPocetak(), program.getKraj(), "Petak");
-                Dan subota = new Dan(program.getPocetak(), program.getKraj(), "Subota");
-                Dan nedjelja = new Dan(program.getPocetak(), program.getKraj(), "Nedjelja");
-
-                Raspored raspored = new Raspored();
-                ((Composite) raspored).dodajSvuDjecu(List.of(ponedjeljak, utorak, srijeda, cetvrtak, petak, subota, nedjelja));
-                raspored.popuniRaspored(new UpravljacDatotekama().procitajDatoteku(program.getNazivDatotekeRasporeda()));
-
-                ((Composite) program).dodajDijete(raspored);
-            } catch (IOException e) {
-                System.err.println(String.format("Ne postoji datoteka sa nazivom %s", program.getNazivDatotekeRasporeda()));
-            }
+            Raspored raspored = dohvatiPopunjenRaspored(program);
+            ((Composite) program).dodajDijete(raspored);
         }
+    }
+
+    private static Raspored dohvatiPopunjenRaspored(Program program) {
+        Dan ponedjeljak = new Dan(program.getPocetak(), program.getKraj(), "Ponedjeljak");
+        Dan utorak = new Dan(program.getPocetak(), program.getKraj(), "Utorak");
+        Dan srijeda = new Dan(program.getPocetak(), program.getKraj(), "Srijeda");
+        Dan cetvrtak = new Dan(program.getPocetak(), program.getKraj(), "Cetvrtak");
+        Dan petak = new Dan(program.getPocetak(), program.getKraj(), "Petak");
+        Dan subota = new Dan(program.getPocetak(), program.getKraj(), "Subota");
+        Dan nedjelja = new Dan(program.getPocetak(), program.getKraj(), "Nedjelja");
+
+        Raspored raspored = new Raspored();
+        ((Composite) raspored).dodajSvuDjecu(List.of(ponedjeljak, utorak, srijeda, cetvrtak, petak, subota, nedjelja));
+        try {
+            raspored.popuniRaspored(new UpravljacDatotekama().procitajDatoteku(program.getNazivDatotekeRasporeda()));
+        } catch (IOException e) {
+            System.err.println(String.format("Ne postoji datoteka s nazivom %s", program.getNazivDatotekeRasporeda()));
+        }
+        return raspored;
     }
 
 }

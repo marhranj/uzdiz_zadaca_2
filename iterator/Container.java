@@ -4,6 +4,6 @@ import marhranj_zadaca_2.composite.Component;
 
 public interface Container<T extends Component> {
 
-    Iterator<T> dohvatiIterator();
+    Iterator<T> dohvatiIteratorDjece();
 
 }
