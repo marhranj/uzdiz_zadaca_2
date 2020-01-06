@@ -1,12 +1,14 @@
 package marhranj_zadaca_2.helperi;
 
 import marhranj_zadaca_2.composite.Component;
+import marhranj_zadaca_2.decorator.Decorator;
+import marhranj_zadaca_2.decorator.DecoratorImpl;
 import marhranj_zadaca_2.entiteti.*;
+import marhranj_zadaca_2.iterator.ContainerEmisija;
 import marhranj_zadaca_2.iterator.Iterator;
 import marhranj_zadaca_2.visitor.EmisijaVisitor;
 import marhranj_zadaca_2.visitor.Visitor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -45,45 +47,18 @@ public class Izbornik {
             prikaziOpcijeZaDan(scanner, dan);
         } else if (odabir == 2) {
             VrstaEmisije odabranaVrsta = odabirVrsteEmisija(scanner);
-            List<Emisija> emisijeSaOdabranomVrstom = dohvatiSveEmisijeSaDefiniranimVrstama(programi, odabranaVrsta);
+            Iterator<Emisija> emisijeSaOdabranomVrstom = new ContainerEmisija(odabranaVrsta).dohvatiIterator();
+            while (emisijeSaOdabranomVrstom.hasNext()) {
+                Emisija emisija = emisijeSaOdabranomVrstom.next();
+                Dan dan = (Dan) (Component) emisija.dohvatiRoditelja();
+                Raspored raspored = (Raspored) (Component) dan.dohvatiRoditelja();
+                Program program = (Program) (Component) raspored.dohvatiRoditelja();
+                String ispis = program.dohvatiDekorator(dan.dohvatiDekorator(emisija.dohvatiDekorator(new DecoratorImpl()))).decorate();
+                System.out.println(ispis);
+            }
         } else {
 
         }
-    }
-
-    private VrstaEmisije odabirVrsteEmisija(Scanner scanner) {
-        List<VrstaEmisije> vrstaEmisija = TvKuca.dajInstancu().dohvatiInicijalneVrsteEmisija();
-        int odabir;
-        do {
-            System.out.println("Odaberite vrstu emisije");
-            for (int i = 0; i < vrstaEmisija.size(); i++) {
-                System.out.println(i + 1 + " " + vrstaEmisija.get(i).getNaziv());
-            }
-            odabir = Integer.parseInt(scanner.nextLine());
-            if (odabir < 0 || odabir > vrstaEmisija.size()) {
-                System.err.println("Niste unijeli ispravan broj");
-            }
-        } while (odabir < 0 || odabir > vrstaEmisija.size());
-        return vrstaEmisija.get(odabir  - 1);
-    }
-
-    private List<Emisija> dohvatiSveEmisijeSaDefiniranimVrstama(List<Program> programi, VrstaEmisije vrstaEmisije) {
-        List<Emisija> emisije = new ArrayList<>();
-        for (Program program : programi) {
-            Raspored raspored = (Raspored) (Component) program.dohvatiDijetePremaIndexu(0);
-            Iterator<Dan> iteratorDana = (Iterator<Dan>) (Iterator) raspored.dohvatiIteratorDjece();
-            while (iteratorDana.hasNext()) {
-                Dan dan = iteratorDana.next();
-                Iterator<Emisija> iteratorEmisija = (Iterator<Emisija>) (Iterator) dan.dohvatiIteratorDjece();
-                while (iteratorEmisija.hasNext()) {
-                    Emisija emisija = iteratorEmisija.next();
-                    if (emisija.getVrstaEmisije().equals(vrstaEmisije)) {
-                        emisije.add(emisija);
-                    }
-                }
-            }
-        }
-        return emisije;
     }
 
     private int prikaziOpcije(Scanner scanner) {
@@ -160,15 +135,32 @@ public class Izbornik {
         if (odabir == 0) {
             System.exit(0);
         } else if (odabir == 1) {
-            System.out.println(dan.dohvatiTermineZaDan());
+
         } else {
-            System.out.println(String.format("Ukupni prihod od reklama u min za dan %s je %d", dan.getNaziv(), izracunajUkupanPrihodOdReklami(dan)));
+            System.out.println(String.format("Ukupni prihod od reklama u min za dan %s je %d",
+                    dan.getNaziv(), izracunajUkupanPrihodOdReklami(dan)));
         }
+    }
+
+    private VrstaEmisije odabirVrsteEmisija(Scanner scanner) {
+        List<VrstaEmisije> vrstaEmisija = TvKuca.dajInstancu().dohvatiInicijalneVrsteEmisija();
+        int odabir;
+        do {
+            System.out.println("Odaberite vrstu emisije");
+            for (int i = 0; i < vrstaEmisija.size(); i++) {
+                System.out.println(i + 1 + " " + vrstaEmisija.get(i).getNaziv());
+            }
+            odabir = Integer.parseInt(scanner.nextLine());
+            if (odabir < 0 || odabir > vrstaEmisija.size()) {
+                System.err.println("Niste unijeli ispravan broj");
+            }
+        } while (odabir < 0 || odabir > vrstaEmisija.size());
+        return vrstaEmisija.get(odabir  - 1);
     }
 
     private long izracunajUkupanPrihodOdReklami(Dan dan) {
         Visitor emisijaVisitor = new EmisijaVisitor();
-        Iterator<Emisija> iteratorEmisija = (Iterator<Emisija>) (Iterator) dan.dohvatiIteratorDjece();
+        Iterator<Emisija> iteratorEmisija = new ContainerEmisija(dan).dohvatiIterator();
         while (iteratorEmisija.hasNext()) {
             Emisija emisija = iteratorEmisija.next();
             emisijaVisitor.visit(emisija);

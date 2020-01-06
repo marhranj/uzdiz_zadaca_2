@@ -1,10 +1,12 @@
 package marhranj_zadaca_2.entiteti;
 
 import marhranj_zadaca_2.composite.Composite;
+import marhranj_zadaca_2.decorator.Decorator;
 import marhranj_zadaca_2.helperi.VremenaUtils;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 public class Program extends Composite<Program> {
 
@@ -25,6 +27,17 @@ public class Program extends Composite<Program> {
         } else {
             throw new IllegalArgumentException("Neispravan zapis u datoteci tv kuce, nedovoljno atributa: " + redDatotekeTvKuca);
         }
+    }
+
+    public Program dohvatiDekorator(Decorator decorator) {
+        super.postaviDekorator(decorator);
+        return this;
+    }
+
+    @Override
+    public String decorate() {
+        String ispis = String.format(" %16s%16s%16s", naziv, pocetak, kraj);
+        return super.decorate() + ispis;
     }
 
     public String getNaziv() {

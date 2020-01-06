@@ -1,6 +1,7 @@
 package marhranj_zadaca_2.entiteti;
 
 import marhranj_zadaca_2.composite.Composite;
+import marhranj_zadaca_2.decorator.Decorator;
 import marhranj_zadaca_2.helperi.DohvacanjeEntiteta;
 import marhranj_zadaca_2.prototype.Prototype;
 import marhranj_zadaca_2.visitor.Visitable;
@@ -8,6 +9,7 @@ import marhranj_zadaca_2.visitor.Visitor;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,6 +48,11 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
         }
     }
 
+    public Emisija dohvatiDekorator(Decorator decorator) {
+        super.postaviDekorator(decorator);
+        return this;
+    }
+
     @Override
     public Prototype clone() {
         return new Emisija(this);
@@ -54,6 +61,12 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public String decorate() {
+        String ispis = String.format(" %16s%16s%32s", nazivEmisije, vrstaEmisije.getNaziv(), Arrays.toString(osobe.toArray()));
+        return super.decorate() + ispis;
     }
 
     public int getId() {

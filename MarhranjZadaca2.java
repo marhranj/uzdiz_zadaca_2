@@ -1,6 +1,5 @@
 package marhranj_zadaca_2;
 
-import com.sun.tools.javac.util.List;
 import marhranj_zadaca_2.composite.Component;
 import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.entiteti.*;
@@ -8,9 +7,9 @@ import marhranj_zadaca_2.helperi.Izbornik;
 import marhranj_zadaca_2.helperi.UcitacKlasa;
 import marhranj_zadaca_2.helperi.UpravljacArgumentimaKmdLin;
 import marhranj_zadaca_2.helperi.UpravljacDatotekama;
-import marhranj_zadaca_2.iterator.Iterator;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MarhranjZadaca2 {
 
@@ -60,12 +59,11 @@ public class MarhranjZadaca2 {
 
     private static void sloziPlanPrograma(UcitacKlasa ucitacKlasa, Composite<Program> planPrograma) {
         planPrograma.dodajSvuDjecu(ucitacKlasa.ucitajPrograme());
-        Iterator<Program> iteratorPrograma = planPrograma.dohvatiIteratorDjece();
-        while (iteratorPrograma.hasNext()) {
-            Program program = iteratorPrograma.next();
-            Raspored raspored = dohvatiPopunjenRaspored(program);
-            ((Composite) program).dodajDijete(raspored);
-        }
+        planPrograma.dohvatiSvuDjecu()
+            .forEach(program -> {
+                Raspored raspored = dohvatiPopunjenRaspored(program);
+                ((Composite) program).dodajDijete(raspored);
+            });
     }
 
     private static Raspored dohvatiPopunjenRaspored(Program program) {
@@ -78,7 +76,7 @@ public class MarhranjZadaca2 {
         Dan nedjelja = new Dan(program.getPocetak(), program.getKraj(), "Nedjelja");
 
         Raspored raspored = new Raspored();
-        ((Composite) raspored).dodajSvuDjecu(List.of(ponedjeljak, utorak, srijeda, cetvrtak, petak, subota, nedjelja));
+        ((Composite) raspored).dodajSvuDjecu(Arrays.asList(ponedjeljak, utorak, srijeda, cetvrtak, petak, subota, nedjelja));
         try {
             raspored.popuniRaspored(new UpravljacDatotekama().procitajDatoteku(program.getNazivDatotekeRasporeda()));
         } catch (IOException e) {

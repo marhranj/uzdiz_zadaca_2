@@ -2,10 +2,10 @@ package marhranj_zadaca_2.entiteti;
 
 import marhranj_zadaca_2.composite.Component;
 import marhranj_zadaca_2.composite.Composite;
+import marhranj_zadaca_2.decorator.Decorator;
 import marhranj_zadaca_2.helperi.VremenaUtils;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -20,6 +20,17 @@ public class Dan extends Composite<Dan> {
         this.pocetakEmitiranja = pocetakEmitiranja;
         this.krajEmitiranja = krajEmitiranja;
         this.naziv = naziv;
+    }
+
+    @Override
+    public String decorate() {
+        String ispis = String.format(" %16s", naziv);
+        return super.decorate() + ispis;
+    }
+
+    public Dan dohvatiDekorator(Decorator decorator) {
+        super.postaviDekorator(decorator);
+        return this;
     }
 
     public String getNaziv() {
@@ -53,19 +64,6 @@ public class Dan extends Composite<Dan> {
             System.err.println("Nije moguce dodati emisiju: " + emisija.getNazivEmisije() + ", u " + pocetak + " na dan " + naziv);
         }
         return uspjesnoDodano;
-    }
-
-    public String dohvatiTermineZaDan() {
-        StringBuilder ispis = new StringBuilder(naziv + ":" + System.lineSeparator());
-        for (Emisija emisija : (List<Emisija>) (List) dohvatiSvuDjecu()) {
-            List<Osoba> osobeEmisije = emisija.getOsobe();
-            String osobeOutput = osobeEmisije.isEmpty()
-                    ? ""
-                    : Arrays.toString(osobeEmisije.toArray());
-            ispis.append(String.format("%-40s %5s %10s %-40s %n", emisija.getNazivEmisije(),
-                    emisija.getPocetak().toString(), emisija.getKraj().toString(), osobeOutput));
-        }
-        return ispis.toString();
     }
 
     private LocalTime pronadjiSlobodnoVrijeme(Emisija emisija) {
