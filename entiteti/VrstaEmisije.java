@@ -1,6 +1,7 @@
 package marhranj_zadaca_2.entiteti;
 
 import marhranj_zadaca_2.composite.Composite;
+import marhranj_zadaca_2.decorator.Decorator;
 
 public class VrstaEmisije extends Composite<VrstaEmisije> {
 
@@ -25,6 +26,17 @@ public class VrstaEmisije extends Composite<VrstaEmisije> {
         } else {
             throw new IllegalArgumentException("Neispravan zapis u datoteci vrste: " + redDatotekeVrste);
         }
+    }
+
+    public VrstaEmisije dohvatiDekorator(Decorator decorator) {
+        super.postaviDekorator(decorator);
+        return this;
+    }
+
+    @Override
+    public String decorate() {
+        String ispis = String.format(" %-16s | %5s |", naziv, maksTrajanjeReklami);
+        return super.decorate() + ispis;
     }
 
     public int getId() {

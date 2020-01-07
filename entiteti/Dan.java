@@ -24,7 +24,7 @@ public class Dan extends Composite<Dan> {
 
     @Override
     public String decorate() {
-        String ispis = String.format(" %16s", naziv);
+        String ispis = String.format(" %-16s |", naziv);
         return super.decorate() + ispis;
     }
 

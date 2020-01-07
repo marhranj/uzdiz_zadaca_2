@@ -48,14 +48,7 @@ public class Izbornik {
         } else if (odabir == 2) {
             VrstaEmisije odabranaVrsta = odabirVrsteEmisija(scanner);
             Iterator<Emisija> emisijeSaOdabranomVrstom = new ContainerEmisija(odabranaVrsta).dohvatiIterator();
-            while (emisijeSaOdabranomVrstom.hasNext()) {
-                Emisija emisija = emisijeSaOdabranomVrstom.next();
-                Dan dan = (Dan) (Component) emisija.dohvatiRoditelja();
-                Raspored raspored = (Raspored) (Component) dan.dohvatiRoditelja();
-                Program program = (Program) (Component) raspored.dohvatiRoditelja();
-                String ispis = program.dohvatiDekorator(dan.dohvatiDekorator(emisija.dohvatiDekorator(new DecoratorImpl()))).decorate();
-                System.out.println(ispis);
-            }
+            ispisEmisija(emisijeSaOdabranomVrstom);
         } else {
 
         }
@@ -135,7 +128,8 @@ public class Izbornik {
         if (odabir == 0) {
             System.exit(0);
         } else if (odabir == 1) {
-
+            Iterator<Emisija> iteratorEmisija = new ContainerEmisija(dan).dohvatiIterator();
+            ispisEmisija(iteratorEmisija);
         } else {
             System.out.println(String.format("Ukupni prihod od reklama u min za dan %s je %d",
                     dan.getNaziv(), izracunajUkupanPrihodOdReklami(dan)));
@@ -166,6 +160,22 @@ public class Izbornik {
             emisijaVisitor.visit(emisija);
         }
         return emisijaVisitor.getUkupnoTrajanjeReklami();
+    }
+
+    private void ispisEmisija(Iterator<Emisija> iteratorEmisija) {
+        while (iteratorEmisija.hasNext()) {
+            Emisija emisija = iteratorEmisija.next();
+            Dan dan = (Dan) (Component) emisija.dohvatiRoditelja();
+            Raspored raspored = (Raspored) (Component) dan.dohvatiRoditelja();
+            Program program = (Program) (Component) raspored.dohvatiRoditelja();
+            String ispis = program.dohvatiDekorator(
+                    dan.dohvatiDekorator(
+                            emisija.dohvatiDekorator(
+                                    emisija.getVrstaEmisije().dohvatiDekorator(
+                                            new DecoratorImpl()))))
+                    .decorate();
+            System.out.println(ispis);
+        }
     }
 
 }

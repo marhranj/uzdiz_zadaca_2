@@ -36,7 +36,7 @@ public class Program extends Composite<Program> {
 
     @Override
     public String decorate() {
-        String ispis = String.format(" %16s%16s%16s", naziv, pocetak, kraj);
+        String ispis = String.format(" %-32s |", naziv);
         return super.decorate() + ispis;
     }
 

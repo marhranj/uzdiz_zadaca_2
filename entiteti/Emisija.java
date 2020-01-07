@@ -65,7 +65,9 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
 
     @Override
     public String decorate() {
-        String ispis = String.format(" %16s%16s%32s", nazivEmisije, vrstaEmisije.getNaziv(), Arrays.toString(osobe.toArray()));
+        String printOsobe = osobe.isEmpty() ? "" : Arrays.toString(osobe.toArray());
+        String ispis = String.format(" %-36s | %10s | %10s | %-92s | ",
+                nazivEmisije, pocetak, kraj, printOsobe);
         return super.decorate() + ispis;
     }
 
