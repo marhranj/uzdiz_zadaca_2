@@ -131,8 +131,8 @@ public class Izbornik {
             Iterator<Emisija> iteratorEmisija = new ContainerEmisija(dan).dohvatiIterator();
             ispisEmisija(iteratorEmisija);
         } else {
-            System.out.println(String.format("Ukupni prihod od reklama u min za dan %s je %d",
-                    dan.getNaziv(), izracunajUkupanPrihodOdReklami(dan)));
+            String ispis = dan.dohvatiDekorator(new DecoratorImpl()).decorate();
+            System.out.println(ispis);
         }
     }
 
@@ -150,16 +150,6 @@ public class Izbornik {
             }
         } while (odabir < 0 || odabir > vrstaEmisija.size());
         return vrstaEmisija.get(odabir  - 1);
-    }
-
-    private long izracunajUkupanPrihodOdReklami(Dan dan) {
-        Visitor emisijaVisitor = new EmisijaVisitor();
-        Iterator<Emisija> iteratorEmisija = new ContainerEmisija(dan).dohvatiIterator();
-        while (iteratorEmisija.hasNext()) {
-            Emisija emisija = iteratorEmisija.next();
-            emisijaVisitor.visit(emisija);
-        }
-        return emisijaVisitor.getUkupnoTrajanjeReklami();
     }
 
     private void ispisEmisija(Iterator<Emisija> iteratorEmisija) {

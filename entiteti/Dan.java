@@ -4,6 +4,10 @@ import marhranj_zadaca_2.composite.Component;
 import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.decorator.Decorator;
 import marhranj_zadaca_2.helperi.VremenaUtils;
+import marhranj_zadaca_2.iterator.ContainerEmisija;
+import marhranj_zadaca_2.iterator.Iterator;
+import marhranj_zadaca_2.visitor.EmisijaVisitor;
+import marhranj_zadaca_2.visitor.Visitor;
 
 import java.time.LocalTime;
 import java.util.Collections;
@@ -24,7 +28,7 @@ public class Dan extends Composite<Dan> {
 
     @Override
     public String decorate() {
-        String ispis = String.format(" %-16s |", naziv);
+        String ispis = String.format(" %-16s | %10.2f |", naziv, (double) izracunajUkupanPrihodOdReklami());
         return super.decorate() + ispis;
     }
 
@@ -64,6 +68,16 @@ public class Dan extends Composite<Dan> {
             System.err.println("Nije moguce dodati emisiju: " + emisija.getNazivEmisije() + ", u " + pocetak + " na dan " + naziv);
         }
         return uspjesnoDodano;
+    }
+
+    private long izracunajUkupanPrihodOdReklami() {
+        Visitor emisijaVisitor = new EmisijaVisitor();
+        Iterator<Emisija> iteratorEmisija = new ContainerEmisija(this).dohvatiIterator();
+        while (iteratorEmisija.hasNext()) {
+            Emisija emisija = iteratorEmisija.next();
+            emisijaVisitor.visit(emisija);
+        }
+        return emisijaVisitor.getUkupnoTrajanjeReklami();
     }
 
     private LocalTime pronadjiSlobodnoVrijeme(Emisija emisija) {
