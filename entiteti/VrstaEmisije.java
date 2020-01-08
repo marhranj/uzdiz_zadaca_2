@@ -10,6 +10,10 @@ public class VrstaEmisije extends Composite<VrstaEmisije> {
     private boolean imaReklame;
     private long maksTrajanjeReklami;
 
+    public VrstaEmisije() {
+
+    }
+
     public VrstaEmisije(String redDatotekeVrste) throws IllegalArgumentException {
         String[] atributi = redDatotekeVrste.split("\\s*;\\s*");
         if (atributi.length > 1) {
@@ -35,8 +39,16 @@ public class VrstaEmisije extends Composite<VrstaEmisije> {
 
     @Override
     public String decorate() {
-        String ispis = String.format(" %-16s | %5s |", naziv, maksTrajanjeReklami);
+        String ispis = String.format(" %-16s | %17s |", naziv, maksTrajanjeReklami);
         return super.decorate() + ispis;
+    }
+
+    @Override
+    public String decorateZaglavlje() {
+        String ispis = String.format(" %-16s | %17s |",
+                centrirajString(16, "Vrsta emisije"),
+                centrirajString(17, "Trajanje reklami"));
+        return super.decorateZaglavlje() + ispis;
     }
 
     public int getId() {

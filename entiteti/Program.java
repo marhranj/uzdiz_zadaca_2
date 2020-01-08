@@ -6,7 +6,6 @@ import marhranj_zadaca_2.helperi.VremenaUtils;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 
 public class Program extends Composite<Program> {
 
@@ -15,6 +14,9 @@ public class Program extends Composite<Program> {
     private LocalTime pocetak;
     private LocalTime kraj;
     private String nazivDatotekeRasporeda;
+
+    public Program() {
+    }
 
     public Program(String redDatotekeTvKuca) {
         String[] atributi = redDatotekeTvKuca.split("\\s*;\\s*");
@@ -38,6 +40,12 @@ public class Program extends Composite<Program> {
     public String decorate() {
         String ispis = String.format(" %-32s |", naziv);
         return super.decorate() + ispis;
+    }
+
+    @Override
+    public String decorateZaglavlje() {
+        String ispis = String.format(" %-32s |", centrirajString(32, "Naziv programa"));
+        return super.decorateZaglavlje() + ispis;
     }
 
     public String getNaziv() {

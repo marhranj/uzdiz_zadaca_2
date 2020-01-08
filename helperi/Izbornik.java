@@ -6,8 +6,6 @@ import marhranj_zadaca_2.decorator.DecoratorImpl;
 import marhranj_zadaca_2.entiteti.*;
 import marhranj_zadaca_2.iterator.ContainerEmisija;
 import marhranj_zadaca_2.iterator.Iterator;
-import marhranj_zadaca_2.visitor.EmisijaVisitor;
-import marhranj_zadaca_2.visitor.Visitor;
 
 import java.util.List;
 import java.util.Scanner;
@@ -153,6 +151,7 @@ public class Izbornik {
     }
 
     private void ispisEmisija(Iterator<Emisija> iteratorEmisija) {
+        ispisZaglavljaTabliceEmisija();
         while (iteratorEmisija.hasNext()) {
             Emisija emisija = iteratorEmisija.next();
             Dan dan = (Dan) (Component) emisija.dohvatiRoditelja();
@@ -165,7 +164,26 @@ public class Izbornik {
                                             new DecoratorImpl()))))
                     .decorate();
             System.out.println(ispis);
+            ispisLinijeTablice(274);
         }
+    }
+
+    private void ispisLinijeTablice(int brojCrtica) {
+        System.out.print(" ");
+        IntStream.range(0, brojCrtica)
+                .forEach(i -> System.out.print("-"));
+        System.out.println();
+    }
+
+    private void ispisZaglavljaTabliceEmisija() {
+        ispisLinijeTablice(274);
+        String ispis = new Program().dohvatiDekorator(
+                new Dan().dohvatiDekorator(
+                        new Emisija().dohvatiDekorator(
+                                new VrstaEmisije().dohvatiDekorator(
+                                        new DecoratorImpl())))).decorateZaglavlje();
+        System.out.println(ispis);
+        ispisLinijeTablice(274);
     }
 
 }

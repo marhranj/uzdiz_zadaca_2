@@ -7,4 +7,9 @@ public class DecoratorImpl implements Decorator {
         return "|";
     }
 
+    @Override
+    public String decorateZaglavlje() {
+        return decorate();
+    }
+
 }

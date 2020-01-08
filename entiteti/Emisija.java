@@ -25,6 +25,9 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
     private LocalTime pocetak;
     private LocalTime kraj;
 
+    public Emisija() {
+    }
+
     public Emisija(Emisija emisija) {
         if (emisija != null) {
             this.id = emisija.id;
@@ -69,6 +72,16 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
         String ispis = String.format(" %-36s | %10s | %10s | %-92s | ",
                 nazivEmisije, pocetak, kraj, printOsobe);
         return super.decorate() + ispis;
+    }
+
+    @Override
+    public String decorateZaglavlje() {
+        String ispis = String.format(" %-36s | %10s | %10s | %-92s | ",
+                centrirajString(36, "Naziv emisije"),
+                centrirajString(10, "Pocetak"),
+                centrirajString(10, "Kraj"),
+                centrirajString(92, "Osobe sa ulogama"));
+        return super.decorateZaglavlje() + ispis;
     }
 
     public int getId() {

@@ -20,6 +20,9 @@ public class Dan extends Composite<Dan> {
     private LocalTime krajEmitiranja;
     private String naziv;
 
+    public Dan() {
+    }
+
     public Dan(LocalTime pocetakEmitiranja, LocalTime krajEmitiranja, String naziv) {
         this.pocetakEmitiranja = pocetakEmitiranja;
         this.krajEmitiranja = krajEmitiranja;
@@ -28,8 +31,16 @@ public class Dan extends Composite<Dan> {
 
     @Override
     public String decorate() {
-        String ispis = String.format(" %-16s | %10.2f |", naziv, (double) izracunajUkupanPrihodOdReklami());
+        String ispis = String.format(" %-16s | %18.2f |", naziv, (double) izracunajUkupanPrihodOdReklami());
         return super.decorate() + ispis;
+    }
+
+    @Override
+    public String decorateZaglavlje() {
+        String ispis = String.format(" %-16s | %18s |",
+                centrirajString(16, "Dan"),
+                centrirajString(18, "Prihod dan (min)"));
+        return super.decorateZaglavlje() + ispis;
     }
 
     public Dan dohvatiDekorator(Decorator decorator) {
