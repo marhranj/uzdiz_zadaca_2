@@ -1,7 +1,6 @@
 package marhranj_zadaca_2.helperi;
 
 import marhranj_zadaca_2.composite.Component;
-import marhranj_zadaca_2.decorator.Decorator;
 import marhranj_zadaca_2.decorator.DecoratorImpl;
 import marhranj_zadaca_2.entiteti.*;
 import marhranj_zadaca_2.iterator.ContainerEmisija;
@@ -55,7 +54,7 @@ public class Izbornik {
     private int prikaziOpcije(Scanner scanner) {
         int odabir;
         do {
-            System.out.println("1. Raspored programa: ");
+            System.out.println("1. Programi: ");
             System.out.println("2. Vrsta emisije za koju se želi tjedni plan: ");
             System.out.println("3. Osobu za koju se želi promjeniti uloga: ");
             odabir = Integer.parseInt(scanner.nextLine());
@@ -129,9 +128,15 @@ public class Izbornik {
             Iterator<Emisija> iteratorEmisija = new ContainerEmisija(dan).dohvatiIterator();
             ispisEmisija(iteratorEmisija);
         } else {
-            String ispis = dan.dohvatiDekorator(new DecoratorImpl()).decorate();
-            System.out.println(ispis);
+            ispisPrihodaZaDan(dan);
         }
+    }
+
+    private void ispisPrihodaZaDan(Dan dan) {
+        ispisZaglavljaZaDan();
+        String ispis = dan.dohvatiDekorator(new DecoratorImpl()).decorate();
+        System.out.println(ispis);
+        ispisLinijeTablice(39);
     }
 
     private VrstaEmisije odabirVrsteEmisija(Scanner scanner) {
@@ -184,6 +189,13 @@ public class Izbornik {
                                         new DecoratorImpl())))).decorateZaglavlje();
         System.out.println(ispis);
         ispisLinijeTablice(274);
+    }
+
+    private void ispisZaglavljaZaDan() {
+        ispisLinijeTablice(39);
+        String ispis = new Dan().dohvatiDekorator(new DecoratorImpl()).decorateZaglavlje();
+        System.out.println(ispis);
+        ispisLinijeTablice(39);
     }
 
 }
