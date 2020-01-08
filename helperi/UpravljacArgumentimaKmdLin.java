@@ -68,9 +68,10 @@ public class UpravljacArgumentimaKmdLin {
     private Function<Integer, String> dohvatiKeyMapper(String[] argumenti) {
         return i -> {
             String argument = argumenti[2 * i];
-            IntPredicate ukloniCrtuSaPrveDvijePozicije = character -> argument.indexOf(character) < 2 && (char) character == '-';
+            IntPredicate filtrirajSveCrte = character ->
+                    argument.indexOf(character) < 2 && (char) character == '-';
             return argument.chars()
-                    .filter(ukloniCrtuSaPrveDvijePozicije.negate())
+                    .filter(filtrirajSveCrte.negate())
                     .collect(StringBuilder::new,
                             StringBuilder::appendCodePoint,
                             StringBuilder::append)
