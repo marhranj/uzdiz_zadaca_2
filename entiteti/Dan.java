@@ -53,6 +53,7 @@ public class Dan extends Composite<Dan> {
     }
 
     public boolean dodajEmisiju(LocalTime pocetak, Emisija emisija) {
+        emisija = (Emisija) emisija.clone();
         boolean uspjesnoDodano = false;
         LocalTime kraj = pocetak.plusMinutes(emisija.getTrajanje());
         if (!zauzetTermin(pocetak, kraj) && unutarVremenaEmitiranjaPrograma(pocetak, kraj)) {
@@ -67,6 +68,7 @@ public class Dan extends Composite<Dan> {
     }
 
     public boolean dodajEmisiju(Emisija emisija) {
+        emisija = (Emisija) emisija.clone();
         boolean uspjesnoDodano = false;
         LocalTime pocetak = pronadjiSlobodnoVrijeme(emisija);
         LocalTime kraj = pocetak.plusMinutes(emisija.getTrajanje());
