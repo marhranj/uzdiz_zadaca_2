@@ -154,4 +154,5 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
     public int compareTo(Emisija emisija) {
         return this.pocetak.compareTo(emisija.pocetak);
     }
+
 }

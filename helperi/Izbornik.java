@@ -6,8 +6,7 @@ import marhranj_zadaca_2.entiteti.*;
 import marhranj_zadaca_2.iterator.ContainerEmisija;
 import marhranj_zadaca_2.iterator.Iterator;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static marhranj_zadaca_2.Konstante.INDEX_PLANA_PROGRAMA;
@@ -196,6 +195,37 @@ public class Izbornik {
         String ispis = new Dan().dohvatiDekorator(new DecoratorImpl()).decorateZaglavlje();
         System.out.println(ispis);
         ispisLinijeTablice(39);
+    }
+
+    private Map<String, List<Uloga>> dohvatiMapuOsobaUloga() {
+        Map<String, List<Uloga>> map = new LinkedHashMap<>();
+        Iterator<Emisija> iteratorEmisija = new ContainerEmisija().dohvatiIterator();
+        while (iteratorEmisija.hasNext()) {
+            Emisija emisija = iteratorEmisija.next();
+            List<Osoba> osobe = emisija.getOsobe();
+            osobe.forEach(osoba -> {
+                popuniMapuOsobaUloga(map, osoba);
+            });
+        }
+        return map;
+    }
+
+    private void popuniMapuOsobaUloga(Map<String, List<Uloga>> map, Osoba osoba) {
+        if (map.containsKey(osoba.getImePrezime())) {
+            List<Uloga> uloge = map.get(osoba.getImePrezime());
+            if (!postojiUloga(uloge, osoba.getUloga())) {
+                uloge.add(osoba.getUloga());
+            }
+        } else {
+            List<Uloga> uloge = new ArrayList<>();
+            uloge.add(osoba.getUloga());
+            map.put(osoba.getImePrezime(), uloge);
+        }
+    }
+
+    private boolean postojiUloga(List<Uloga> uloge, Uloga uloga) {
+        return uloge.stream()
+                .anyMatch(u -> u.equals(uloga));
     }
 
 }
