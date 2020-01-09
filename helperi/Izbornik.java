@@ -48,21 +48,25 @@ public class Izbornik {
             Iterator<Emisija> emisijeSaOdabranomVrstom = new ContainerEmisija(odabranaVrsta).dohvatiIterator();
             ispisEmisija(emisijeSaOdabranomVrstom);
         } else {
-            Map<String, List<Uloga>> mapaOsobaUoga = dohvatiMapuOsobaUloga();
-            String odabranaOsoba = odaberiOsobu(scanner, mapaOsobaUoga);
-            List<Uloga> uloge = mapaOsobaUoga.get(odabranaOsoba);
-            Uloga odabranaUloga = odaberiUlogu(scanner, uloge);
-            Uloga novaUloga = odaberiUlogu(scanner, TvKuca.dajInstancu().dohvatiInicijalneUloge());
-            Subject emisijaPublisher = new EmisijaPublisher();
-            Iterator<Emisija> iteratorEmisija = new ContainerEmisija().dohvatiIterator();
-            while (iteratorEmisija.hasNext()) {
-                Emisija emisija = iteratorEmisija.next();
-                emisijaPublisher.dodajObserver(emisija);
-            }
-            emisijaPublisher.obavijesti(odabranaOsoba, odabranaUloga, novaUloga);
-            System.out.println(String.format("Uloga osobe %s uspjesno promjenjena iz %s u %s",
-                    odabranaOsoba, odabranaUloga, novaUloga));
+            IspisOpcijePromjeneUloge(scanner);
         }
+    }
+
+    private void IspisOpcijePromjeneUloge(Scanner scanner) {
+        Map<String, List<Uloga>> mapaOsobaUoga = dohvatiMapuOsobaUloga();
+        String odabranaOsoba = odaberiOsobu(scanner, mapaOsobaUoga);
+        List<Uloga> uloge = mapaOsobaUoga.get(odabranaOsoba);
+        Uloga odabranaUloga = odaberiUlogu(scanner, uloge);
+        Uloga novaUloga = odaberiUlogu(scanner, TvKuca.dajInstancu().dohvatiInicijalneUloge());
+        Subject emisijaPublisher = new EmisijaPublisher();
+        Iterator<Emisija> iteratorEmisija = new ContainerEmisija().dohvatiIterator();
+        while (iteratorEmisija.hasNext()) {
+            Emisija emisija = iteratorEmisija.next();
+            emisijaPublisher.dodajObserver(emisija);
+        }
+        emisijaPublisher.obavijesti(odabranaOsoba, odabranaUloga, novaUloga);
+        System.out.println(String.format("Uloga osobe %s uspjesno promjenjena iz %s u %s",
+                odabranaOsoba, odabranaUloga, novaUloga));
     }
 
     private Uloga odaberiUlogu(Scanner scanner, List<Uloga> uloge) {
