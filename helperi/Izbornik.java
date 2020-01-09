@@ -5,6 +5,8 @@ import marhranj_zadaca_2.decorator.DecoratorImpl;
 import marhranj_zadaca_2.entiteti.*;
 import marhranj_zadaca_2.iterator.ContainerEmisija;
 import marhranj_zadaca_2.iterator.Iterator;
+import marhranj_zadaca_2.observer.EmisijaPublisher;
+import marhranj_zadaca_2.observer.Subject;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -50,7 +52,16 @@ public class Izbornik {
             String odabranaOsoba = odaberiOsobu(scanner, mapaOsobaUoga);
             List<Uloga> uloge = mapaOsobaUoga.get(odabranaOsoba);
             Uloga odabranaUloga = odaberiUlogu(scanner, uloge);
-            System.out.println();
+            Uloga novaUloga = odaberiUlogu(scanner, TvKuca.dajInstancu().dohvatiInicijalneUloge());
+            Subject emisijaPublisher = new EmisijaPublisher();
+            Iterator<Emisija> iteratorEmisija = new ContainerEmisija().dohvatiIterator();
+            while (iteratorEmisija.hasNext()) {
+                Emisija emisija = iteratorEmisija.next();
+                emisijaPublisher.dodajObserver(emisija);
+            }
+            emisijaPublisher.obavijesti(odabranaOsoba, odabranaUloga, novaUloga);
+            System.out.println(String.format("Uloga osobe %s uspjesno promjenjena iz %s u %s",
+                    odabranaOsoba, odabranaUloga, novaUloga));
         }
     }
 

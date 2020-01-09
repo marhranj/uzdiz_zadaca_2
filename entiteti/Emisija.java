@@ -3,6 +3,7 @@ package marhranj_zadaca_2.entiteti;
 import marhranj_zadaca_2.composite.Composite;
 import marhranj_zadaca_2.decorator.Decorator;
 import marhranj_zadaca_2.helperi.DohvacanjeEntiteta;
+import marhranj_zadaca_2.observer.Observer;
 import marhranj_zadaca_2.prototype.Prototype;
 import marhranj_zadaca_2.visitor.Visitable;
 import marhranj_zadaca_2.visitor.Visitor;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Emisija extends Composite<Emisija> implements Prototype, Visitable, Comparable<Emisija> {
+public class Emisija extends Composite<Emisija> implements Prototype, Visitable, Comparable<Emisija>, Observer {
 
     private int id;
     private String nazivEmisije;
@@ -84,6 +85,19 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
         return super.decorateZaglavlje() + ispis;
     }
 
+    @Override
+    public int compareTo(Emisija emisija) {
+        return this.pocetak.compareTo(emisija.pocetak);
+    }
+
+    @Override
+    public void update(String imeOsobe, Uloga staraUloga, Uloga novaUloga) {
+        osobe.stream()
+                .filter(osoba -> osoba.getImePrezime().equals(imeOsobe))
+                .filter(osoba -> osoba.getUloga().equals(staraUloga))
+                .forEach(osoba -> osoba.setUloga(novaUloga));
+    }
+
     public int getId() {
         return id;
     }
@@ -148,11 +162,6 @@ public class Emisija extends Composite<Emisija> implements Prototype, Visitable,
         } else {
             throw new IllegalArgumentException();
         }
-    }
-
-    @Override
-    public int compareTo(Emisija emisija) {
-        return this.pocetak.compareTo(emisija.pocetak);
     }
 
 }
