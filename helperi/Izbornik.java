@@ -46,8 +46,41 @@ public class Izbornik {
             Iterator<Emisija> emisijeSaOdabranomVrstom = new ContainerEmisija(odabranaVrsta).dohvatiIterator();
             ispisEmisija(emisijeSaOdabranomVrstom);
         } else {
-
+            Map<String, List<Uloga>> mapaOsobaUoga = dohvatiMapuOsobaUloga();
+            String odabranaOsoba = odaberiOsobu(scanner, mapaOsobaUoga);
+            List<Uloga> uloge = mapaOsobaUoga.get(odabranaOsoba);
+            Uloga odabranaUloga = odaberiUlogu(scanner, uloge);
+            System.out.println();
         }
+    }
+
+    private Uloga odaberiUlogu(Scanner scanner, List<Uloga> uloge) {
+        int odabir;
+        do {
+            System.out.println("Odaberite ulogu: ");
+            IntStream.range(0, uloge.size())
+                    .forEach(i -> System.out.println(String.format("%d. %s", i + 1, uloge.get(i))));
+            odabir = Integer.parseInt(scanner.nextLine());
+            if (odabir < 0 || odabir > uloge.size()) {
+                System.err.println("Niste unijeli ispravan broj");
+            }
+        } while (odabir < 0 || odabir > uloge.size());
+        return uloge.get(odabir - 1);
+    }
+
+    private String odaberiOsobu(Scanner scanner, Map<String, List<Uloga>> mapaOsobaUoga) {
+        int odabir;
+        List<String> osobe = new ArrayList<>(mapaOsobaUoga.keySet());
+        do {
+            System.out.println("Odaberite osobu: ");
+            IntStream.range(0, osobe.size())
+                    .forEach(i -> System.out.println(String.format("%d. %s", i + 1, osobe.get(i))));
+            odabir = Integer.parseInt(scanner.nextLine());
+            if (odabir < 0 || odabir > osobe.size()) {
+                System.err.println("Niste unijeli ispravan broj");
+            }
+        } while (odabir < 0 || odabir > osobe.size());
+        return osobe.get(odabir - 1);
     }
 
     private int prikaziOpcije(Scanner scanner) {
@@ -211,15 +244,17 @@ public class Izbornik {
     }
 
     private void popuniMapuOsobaUloga(Map<String, List<Uloga>> map, Osoba osoba) {
-        if (map.containsKey(osoba.getImePrezime())) {
-            List<Uloga> uloge = map.get(osoba.getImePrezime());
-            if (!postojiUloga(uloge, osoba.getUloga())) {
+        if (osoba.getUloga() != null) {
+            if (map.containsKey(osoba.getImePrezime())) {
+                List<Uloga> uloge = map.get(osoba.getImePrezime());
+                if (!postojiUloga(uloge, osoba.getUloga())) {
+                    uloge.add(osoba.getUloga());
+                }
+            } else {
+                List<Uloga> uloge = new ArrayList<>();
                 uloge.add(osoba.getUloga());
+                map.put(osoba.getImePrezime(), uloge);
             }
-        } else {
-            List<Uloga> uloge = new ArrayList<>();
-            uloge.add(osoba.getUloga());
-            map.put(osoba.getImePrezime(), uloge);
         }
     }
 

@@ -29,4 +29,9 @@ public class Uloga extends Composite<Uloga> {
         return nazivUloge;
     }
 
+    @Override
+    public String toString() {
+        return nazivUloge;
+    }
+
 }
